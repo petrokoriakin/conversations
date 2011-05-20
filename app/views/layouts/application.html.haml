@@ -1,0 +1,35 @@
+!!!
+%html
+  %head
+    %title Craiggers
+
+    <link rel="icon" type="image/png" href="/images/icon.png">
+
+    = stylesheet_link_tag 'static'
+    = yield :stylesheets
+
+    = csrf_meta_tag
+    %body
+
+      #container
+        #header
+          .container_16
+            .logo
+
+        #title
+          .container_16
+            = yield :title
+
+        #content
+          .container_16
+            = yield
+
+        #footer
+
+      = javascript_include_tag 'rails'
+      = javascript_include_tag 'json2'
+      = javascript_include_tag 'underscore-min'
+      = javascript_include_tag 'backbone-min'
+      = javascript_include_tag 'icanhaz-min'
+      = javascript_include_tag 'jquery.min'
+      = yield :javascripts

@@ -1,0 +1,13 @@
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/**/*
+*.swp
+public/stylesheets/.sass-cache
+nbproject
+nbproject/*
+nbproject/**/*
+*.iml
+.idea
+.project
+

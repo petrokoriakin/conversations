@@ -1,0 +1,39 @@
+%script#item-template{:type => "text/template"}
+  {{#done}}
+  .todo.done
+    .display
+      %input.check{:type=>"checkbox", :checked => "checked"}
+      %input.check{:type=>"checkbox"}
+      .todo-content
+      %span.todo-destroy
+    .edit
+      %input.todo-input{ :type=>"text", :value=>""}
+  {{/done}}
+  {{^done}}
+  .todo
+    .display
+      %input.check{:type=>"checkbox", :checked => "checked"}
+      %input.check{:type=>"checkbox"}
+      .todo-content
+      %span.todo-destroy
+    .edit
+      %input.todo-input{ :type=>"text", :value=>""}
+  {{/done}}
+
+%script#stats-template{:type => "text/template"}
+  {{#total}}
+  %span.todo-count
+    %span.number
+      {{remaining}}
+    %span.word
+      items left.
+  {{/total}}
+  {{#done}}
+  %span.todo-clear
+    %a{:href => '#' }
+      Clear
+      %span.number-done
+        {{done}}
+      %span.word-done
+        completed items
+  {{/done}}
