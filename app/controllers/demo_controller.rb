@@ -1,6 +1,4 @@
 class DemoController < ApplicationController
-  def backbone
-  end
 
   def chat
      if rand(7) == 1

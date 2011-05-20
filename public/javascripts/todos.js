@@ -4,8 +4,49 @@
 // to persist Backbone models within your browser.
 
 // Load the application once the DOM is ready, using `jQuery.ready`:
+function isEmpty(object) {
+    for(var i in object) {return false;}
+    return true;
+}
+
+// extend underscore a bit
+_.mixin({
+
+  isDefined: function(obj) {
+    !_.isUndefined(obj);
+  },
+
+  isPresent: function(obj) {
+    !_.isEmpty(obj);
+  },
+
+  commatizeNumber: function(num) {
+    if(_.isNumber(num)) num = num.toString();
+    var commatized = '';
+    for(var i = num.length - 1, j = 1; i > 0; --i, j++) {
+      commatized = num.charAt(i) + commatized;
+      if(j % 3 == 0) {
+        commatized = ',' + commatized;
+      }
+    }
+    commatized = num.charAt(0) + commatized;
+    return commatized;
+  },
+
+  cacheBuster: function() {
+    return new Date().getTime();
+  },
+
+  trim: function(str) {
+    return str.replace(/^\s*|\s*$/g,'');
+  }
+
+});
+
 $(function(){
 
+
+var listConversationsStarted = true;
   // Todo Model
 
 window.Todo = Backbone.Model.extend({
@@ -190,6 +231,7 @@ window.Todo = Backbone.Model.extend({
       Todos.bind('all',     this.render);
 
       Todos.fetch();
+      this.startListConversations();
     },
 
     // Re-rendering the App just means refreshing the statistics -- the rest
@@ -248,6 +290,51 @@ window.Todo = Backbone.Model.extend({
       if (val == '' || val == this.input.attr('placeholder')) return;
       var show = function(){ tooltip.show().fadeIn(); };
       this.tooltipTimeout = _.delay(show, 1000);
+    },
+
+    // Generate the attributes for a new Todo item.
+    gotAttributes: function(text) {
+      return {
+        content: text,
+        order:   Todos.nextOrder(),
+        done:    false
+      };
+    },
+
+    startListConversations: function() {
+      function listConversations(){
+      if (listConversationsStarted){
+        var started_at = _.cacheBuster();
+        var request = $.ajax({
+          cache: false,
+          url: '/todos/chatroom',
+          dataType: 'json',
+          success: function(data, status, jqXHR){
+              Todos.create({content: data.utterance, order: Todos.nextOrder(), done: false});
+          },
+          error: function(){
+          },
+          complete: function(jqXHR){
+             var complited_at = _.cacheBuster();
+             // PyotrK: Please, keep this for debug mode
+             //var time_differense = 50000 - (complited_at - started_at);
+             var time_differense = 5000 - (complited_at - started_at);
+             if (time_differense > 0) {
+                setTimeout(function() {
+                    listConversations();
+                }, time_differense );
+             } else {
+               listConversations();
+             }
+          }
+        });
+      } else {
+        setTimeout( function(){
+            listConversations();
+        }, 5000 );
+      }
+    }
+    listConversations();
     }
 
   });

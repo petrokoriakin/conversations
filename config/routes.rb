@@ -1,7 +1,8 @@
 Js::Application.routes.draw do
-  resources :todos
 
-  get "demo/backbone"
+  get "todos/chatroom"
+
+  resources :todos
 
   get "demo/polling"
 
