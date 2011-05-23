@@ -20,19 +20,46 @@ class ConversationsController < ApplicationController
     #  }
     #]
     #
-    #
     #current_identity.get_conversations
      if rand(150) > 3
       render :nothing => true, :status => 404
     else
       sleep(rand(10));
-      render :json =>{ :utterance => "Hi! Have a random number:  . #{rand 10}"}
+      render :json =>  [{"conversationID"=>"3",
+    "ownerID"=>"2",
+     "otherPartyID"=>"12",
+     "postKey"=>"BUHMR85",
+     "utterances"=>[{"utteranceID"=>"4", "authorID"=>"12", "text"=>"olololo", "timestamp"=>"2011-05-19 13:30:04 UTC"},
+                    {"utteranceID"=>"5", "authorID"=>"12", "text"=>"one more utterance", "timestamp"=>"2011-05-23 12:52:08 UTC"}]
+      },
+      {"conversationID"=>"4",
+       "ownerID"=>"2",
+       "otherPartyID"=>"12",
+       "postKey"=>"BUGMW9M",
+       "utterances"=>[{"utteranceID"=>"6", "authorID"=>"12", "text"=>"go go go", "timestamp"=>"2011-05-23 13:20:28 UTC"},
+                       {"utteranceID"=>"7", "authorID"=>"12", "text"=>"how mutch?", "timestamp"=>"2011-05-23 13:20:44 UTC"}]
+      }
+    ]
     end
   end
 
   def index
      p current_identity
-     render :json => Conversation.all
+     render :json =>  [{"conversationID"=>"3",
+    "ownerID"=>"2",
+     "otherPartyID"=>"12",
+     "postKey"=>"BUHMR85",
+     "utterances"=>[{"utteranceID"=>"4", "authorID"=>"12", "text"=>"olololo", "timestamp"=>"2011-05-19 13:30:04 UTC"},
+                    {"utteranceID"=>"5", "authorID"=>"12", "text"=>"one more utterance", "timestamp"=>"2011-05-23 12:52:08 UTC"}]
+      },
+      {"conversationID"=>"4",
+       "ownerID"=>"2",
+       "otherPartyID"=>"12",
+       "postKey"=>"BUGMW9M",
+       "utterances"=>[{"utteranceID"=>"6", "authorID"=>"12", "text"=>"go go go", "timestamp"=>"2011-05-23 13:20:28 UTC"},
+                       {"utteranceID"=>"7", "authorID"=>"12", "text"=>"how mutch?", "timestamp"=>"2011-05-23 13:20:44 UTC"}]
+      }
+    ]
    end
 
    def show

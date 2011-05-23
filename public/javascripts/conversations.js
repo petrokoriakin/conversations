@@ -75,14 +75,12 @@ window.Utterance = Backbone.Model.extend({
 
   window.UtteranceView = Backbone.View.extend({
 
-    tagName:  "li",
-
     template: _.template($('#utterance-template').html()),
 
     initialize: function() {
-      _.bindAll(this, 'render', 'close');
-      this.model.bind('change', this.render);
-      this.model.view = this;
+     // _.bindAll(this, 'render', 'close');
+     //this.model.bind('change', this.render);
+     // this.model.view = this;
     },
 
     render: function() {
@@ -230,11 +228,11 @@ window.Conversation = Backbone.Model.extend({
     // To avoid XSS (not that it would be harmful in this particular app),
     // we use `jQuery.text` to set the contents of the todo item.
     setContent: function() {
-      var content = this.model.get('content');
-      this.$('.todo-content').text(content);
-      this.input = this.$('.todo-input');
-      this.input.bind('blur', this.close);
-      this.input.val(content);
+      var content = this.model.get('postKey');
+      this.$('.post-key').text(content);
+//      var utterances = new UtteranceView(this.model.get('utterances'));
+//      console.log(utterances);
+//      this.$('.conversation-message-box').html(utterances.el);
     },
 
     // Switch this view into `"editing"` mode, displaying the input field.
@@ -242,10 +240,10 @@ window.Conversation = Backbone.Model.extend({
       var self = $(this.el);
       var utterance = $('.conversation-textarea', self).val();
 
-      var last = $('#conversation-message-box.utterance-last', self);
-      $('#conversation-message-box.utterance-last', self).html(utterance);
-      $('#conversation-message-box.utterance-last', self).removeClass('utterance-last');
-      last.append('<div id=\"utterance-last\"></div>');
+//      var last = $('#conversation-message-box.utterance-last', self);
+//      $('#conversation-message-box.utterance-last', self).html(utterance);
+//      $('#conversation-message-box.utterance-last', self).removeClass('utterance-last');
+//      last.append('<div id=\"utterance-last\"></div>');
 
       this.model.save({content: utterance});
 //      $.ajax({
@@ -294,9 +292,7 @@ window.Conversation = Backbone.Model.extend({
 
     // Delegated events for creating new items, and clearing completed ones.
     events: {
-      "keypress #new-todo":  "createOnEnter",
-      "keyup #new-todo":     "showTooltip",
-      "click .todo-clear a": "clearCompleted"
+      "keypress #new-todo":  "createOnEnter"
     },
 
     // At initialization we bind to the relevant events on the `Todos`
@@ -343,18 +339,6 @@ window.Conversation = Backbone.Model.extend({
       if (e.keyCode != 13) return;
       Conversations.create(this.newAttributes());
       this.input.val('');
-    },
-
-    // Lazily show the tooltip that tells you to press `enter` to save
-    // a new todo item, after one second.
-    showTooltip: function(e) {
-      var tooltip = this.$(".ui-tooltip-top");
-      var val = this.input.val();
-      tooltip.fadeOut();
-      if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-      if (val == '' || val == this.input.attr('placeholder')) return;
-      var show = function(){ tooltip.show().fadeIn(); };
-      this.tooltipTimeout = _.delay(show, 1000);
     },
 
     startListConversations: function() {
