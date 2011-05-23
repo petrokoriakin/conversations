@@ -24,5 +24,4 @@ end
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
   gem "autotest"
-  gem 'ruby-debug'
 end

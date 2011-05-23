@@ -1,7 +1,7 @@
 class ConversationsController < ApplicationController
 #comment
   def chatroom
-     if rand(30) > 1
+     if rand(150) > 3
       render :nothing => true, :status => 404
     else
       sleep(rand(10));
@@ -10,6 +10,7 @@ class ConversationsController < ApplicationController
   end
 
   def index
+     p current_identity
      render :json => Conversation.all
    end
 
@@ -22,9 +23,12 @@ class ConversationsController < ApplicationController
      render :json => conversation
    end
 
+   #TODO: Use this method for adding new utterances
    def update
      conversation = Conversation.find(params[:id])
+     #current_identity.add_utterance(params)
      conversation.update_attributes! params
+
      render :json => conversation
    end
 
