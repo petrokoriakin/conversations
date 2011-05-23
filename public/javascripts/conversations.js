@@ -45,6 +45,7 @@ _.mixin({
 
 $(function(){
 
+var listConversationsStarted = true;
 
 window.Utterance = Backbone.Model.extend({
 
@@ -148,20 +149,11 @@ window.Utterance = Backbone.Model.extend({
 
 window.Conversation = Backbone.Model.extend({
 
-  defaults: {
-      content: "empty utterace...",
-      done: false
-  },
 
   initialize: function() {
     if (!this.get("content")) {
       this.set({"content": this.EMPTY});
     }
-  },
-
-  //TODO: Implement utterances proccessing right here
-  toggle: function() {
-    this.save({done: !this.get("done")});
   },
 
   url : function() {
@@ -188,26 +180,11 @@ window.Conversation = Backbone.Model.extend({
     // Save all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos"),
 
-    // Filter down the list of all todo items that are finished.
-    done: function() {
-      return this.filter(function(conversation){ return conversation.get('done'); });
-    },
-
-    // Filter down the list to only todo items that are still not finished.
-    remaining: function() {
-      return this.without.apply(this, this.done());
-    },
-
     // We keep the Todos in sequential order, despite being saved by unordered
     // GUID in the database. This generates the next order number for new items.
     nextOrder: function() {
       if (!this.length) return 1;
       return this.last().get('order') + 1;
-    },
-
-    // Todos are sorted by their original insertion order.
-    comparator: function(conversation) {
-      return conversation.get('order');
     }
 
   });
@@ -229,7 +206,6 @@ window.Conversation = Backbone.Model.extend({
 
     // The DOM events specific to an item.
     events: {
-      "click .check"              : "toggleDone",
       "click button#submit"       : "send",
       "click span.todo-destroy"   : "clear",
       "keypress .todo-input"      : "updateOnEnter"
@@ -259,11 +235,6 @@ window.Conversation = Backbone.Model.extend({
       this.input = this.$('.todo-input');
       this.input.bind('blur', this.close);
       this.input.val(content);
-    },
-
-    // Toggle the `"done"` state of the model.
-    toggleDone: function() {
-      this.model.toggle();
     },
 
     // Switch this view into `"editing"` mode, displaying the input field.
@@ -345,15 +316,6 @@ window.Conversation = Backbone.Model.extend({
     },
 
     // Re-rendering the App just means refreshing the statistics -- the rest
-    // of the app doesn't change.
-    render: function() {
-      var done = Conversations.done().length;
-      this.$('#todo-stats').html(this.statsTemplate({
-        total:      Conversations.length,
-        done:       Conversations.done().length,
-        remaining:  Conversations.remaining().length
-      }));
-    },
 
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
@@ -371,8 +333,7 @@ window.Conversation = Backbone.Model.extend({
     newAttributes: function() {
       return {
         content: this.input.val(),
-        order:   Conversations.nextOrder(),
-        done:    false
+        order:   Conversations.nextOrder()
       };
     },
 
@@ -382,12 +343,6 @@ window.Conversation = Backbone.Model.extend({
       if (e.keyCode != 13) return;
       Conversations.create(this.newAttributes());
       this.input.val('');
-    },
-
-    // Clear all done todo items, destroying their models.
-    clearCompleted: function() {
-      _.each(Conversations.done(), function(conversation){ conversation.clear(); });
-      return false;
     },
 
     // Lazily show the tooltip that tells you to press `enter` to save
@@ -402,15 +357,6 @@ window.Conversation = Backbone.Model.extend({
       this.tooltipTimeout = _.delay(show, 1000);
     },
 
-    // Generate the attributes for a new Todo item.
-    gotAttributes: function(text) {
-      return {
-        content: text,
-        order:   Conversations.nextOrder(),
-        done:    false
-      };
-    },
-
     startListConversations: function() {
       function listConversations(){
       if (listConversationsStarted){
@@ -420,7 +366,7 @@ window.Conversation = Backbone.Model.extend({
           url: '/conversations/chatroom',
           dataType: 'json',
           success: function(data, status, jqXHR){
-              Conversations.create({content: data.utterance, order: Conversations.nextOrder(), done: false});
+              Conversations.create({content: data.utterance, order: Conversations.nextOrder()});
           },
           error: function(){
           },
