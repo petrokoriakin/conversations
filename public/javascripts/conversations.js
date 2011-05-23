@@ -77,6 +77,16 @@ window.Todo = Backbone.Model.extend({
 
 });
 
+  Conversation: Backbone.Model.extend({
+
+    initialize: function() {
+      this.set({
+        'status' : ''
+      });
+    }
+
+  });
+
 
   // Todo Collection
   // ---------------
@@ -111,6 +121,18 @@ window.Todo = Backbone.Model.extend({
     // Todos are sorted by their original insertion order.
     comparator: function(todo) {
       return todo.get('order');
+    }
+
+  });
+
+  Conversations: Backbone.Collection.extend({
+
+    model: Model.Conversation,
+
+    getByConversationId: function(id) {
+      return this.find(function(conversation) {
+        return conversation.get('conversationID') === id;
+      });
     }
 
   });
@@ -194,6 +216,68 @@ window.Todo = Backbone.Model.extend({
     // Remove the item, destroy the model.
     clear: function() {
       this.model.clear();
+    }
+
+  });
+
+  Conversations: Backbone.View.extend({
+
+    el: $('#conversations'),
+
+    events: {
+    },
+
+    initialize: function(options) {
+      this.render();
+    },
+
+    render: function() {
+      var currentstatus = "";
+      this.collection.each(function(conversation) {
+        currentstatus = conversation.get('status');
+        if (currentstatus != "closed" && currentstatus != "opened") {
+          new Views.Conversation({model: conversation}).render();
+          conversation.set({status: "opened"});
+        }
+      });
+    }
+
+  });
+
+  Conversation: Backbone.View.extend({
+
+    className: 'conversation',
+
+    events: {
+      'click .close-conversation': 'exit',
+      'click .submit': 'send'
+    },
+
+    initialize: function() {
+    },
+
+    render: function() {
+      $(this.el).html(ich.conversation(this.model.toJSON()));
+      $('#conversations .conversations').append(this.el);
+    },
+
+    exit: function() {
+      this.model.set({status: "closed"});
+      $(this.el).html("");
+      $(this.el).hide();
+    },
+
+    send: function() {
+      var self = $(this.el);
+      var postkey = this.model.get('postKey');
+      var utterance = $('.conversation-textarea', self).val();
+      $('.conversation-textarea', self).val("");
+      $.ajax({
+         url: '/conversations/add?conversationID=' + this.model.get('conversationID') + '&text=' + utterance + "&postKey=" + postkey,
+         dataType: 'json',
+         success: function(data){
+         }
+      });
     }
 
   });

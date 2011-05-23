@@ -1,7 +1,7 @@
 class ConversationsController < ApplicationController
 #comment
   def chatroom
-     if rand(30) > 3
+     if rand(30) > 1
       render :nothing => true, :status => 404
     else
       sleep(rand(10));

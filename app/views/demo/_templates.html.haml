@@ -37,3 +37,18 @@
       %span.word-done
         completed items
   {{/done}}
+
+%script#conversation{ :type => 'text/html' }
+  #new-conversation-box
+    #header-conversation
+      %a.link.link-header-conversation
+        %span.close-conversation close
+      %h6 PostKey: {{postKey}}
+      %hr
+    #conversation-input-box
+      %label Your message:
+      %button.submit Send
+      %textarea#text_conversation.conversation-textarea{ :name => "conversation[text]", :cols=>"20", :rows=>"2" }
+      #conversation-message-box
+        .conversation-id{:id => "conversation-id-{{conversationID}}"}
+          {{utterances}}
