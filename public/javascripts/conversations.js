@@ -49,10 +49,10 @@ $(function(){
 var listConversationsStarted = true;
   // Todo Model
 
-window.Todo = Backbone.Model.extend({
+window.Conversation = Backbone.Model.extend({
 
   defaults: {
-      content: "empty todo...",
+      content: "empty utterace...",
       done: false
   },
 
@@ -62,6 +62,7 @@ window.Todo = Backbone.Model.extend({
     }
   },
 
+  //TODO: Implement utterances proccessing right here
   toggle: function() {
     this.save({done: !this.get("done")});
   },
@@ -83,17 +84,17 @@ window.Todo = Backbone.Model.extend({
 
   // The collection of todos is backed by *localStorage* instead of a remote
   // server.
-  window.TodoList = Backbone.Collection.extend({
+  window.ConversationList = Backbone.Collection.extend({
 
     // Reference to this collection's model.
-    model: Todo,
+    model: Conversation,
     url :'/conversations',
     // Save all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos"),
 
     // Filter down the list of all todo items that are finished.
     done: function() {
-      return this.filter(function(todo){ return todo.get('done'); });
+      return this.filter(function(conversation){ return conversation.get('done'); });
     },
 
     // Filter down the list to only todo items that are still not finished.
@@ -109,20 +110,20 @@ window.Todo = Backbone.Model.extend({
     },
 
     // Todos are sorted by their original insertion order.
-    comparator: function(todo) {
-      return todo.get('order');
+    comparator: function(conversation) {
+      return conversation.get('order');
     }
 
   });
 
   // Create our global collection of **Todos**.
-  window.Todos = new TodoList;
+  window.Conversations = new ConversationList;
 
   // Todo Item View
   // --------------
 
   // The DOM element for a todo item...
-  window.TodoView = Backbone.View.extend({
+  window.ConversationView = Backbone.View.extend({
 
     //... is a list tag.
     tagName:  "li",
@@ -226,42 +227,42 @@ window.Todo = Backbone.Model.extend({
 
       this.input    = this.$("#new-todo");
 
-      Todos.bind('add',     this.addOne);
-      Todos.bind('refresh', this.addAll);
-      Todos.bind('all',     this.render);
+      Conversations.bind('add',     this.addOne);
+      Conversations.bind('refresh', this.addAll);
+      Conversations.bind('all',     this.render);
 
-      Todos.fetch();
+      Conversations.fetch();
       this.startListConversations();
     },
 
     // Re-rendering the App just means refreshing the statistics -- the rest
     // of the app doesn't change.
     render: function() {
-      var done = Todos.done().length;
+      var done = Conversations.done().length;
       this.$('#todo-stats').html(this.statsTemplate({
-        total:      Todos.length,
-        done:       Todos.done().length,
-        remaining:  Todos.remaining().length
+        total:      Conversations.length,
+        done:       Conversations.done().length,
+        remaining:  Conversations.remaining().length
       }));
     },
 
     // Add a single todo item to the list by creating a view for it, and
     // appending its element to the `<ul>`.
-    addOne: function(todo) {
-      var view = new TodoView({model: todo});
+    addOne: function(conversation) {
+      var view = new ConversationView({model: conversation});
       this.$("#todo-list").append(view.render().el);
     },
 
     // Add all items in the **Todos** collection at once.
     addAll: function() {
-      Todos.each(this.addOne);
+      Conversations.each(this.addOne);
     },
 
     // Generate the attributes for a new Todo item.
     newAttributes: function() {
       return {
         content: this.input.val(),
-        order:   Todos.nextOrder(),
+        order:   Conversations.nextOrder(),
         done:    false
       };
     },
@@ -270,13 +271,13 @@ window.Todo = Backbone.Model.extend({
     // persisting it to *localStorage*.
     createOnEnter: function(e) {
       if (e.keyCode != 13) return;
-      Todos.create(this.newAttributes());
+      Conversations.create(this.newAttributes());
       this.input.val('');
     },
 
     // Clear all done todo items, destroying their models.
     clearCompleted: function() {
-      _.each(Todos.done(), function(todo){ todo.clear(); });
+      _.each(Conversations.done(), function(conversation){ conversation.clear(); });
       return false;
     },
 
@@ -296,7 +297,7 @@ window.Todo = Backbone.Model.extend({
     gotAttributes: function(text) {
       return {
         content: text,
-        order:   Todos.nextOrder(),
+        order:   Conversations.nextOrder(),
         done:    false
       };
     },
@@ -310,7 +311,7 @@ window.Todo = Backbone.Model.extend({
           url: '/conversations/chatroom',
           dataType: 'json',
           success: function(data, status, jqXHR){
-              Todos.create({content: data.utterance, order: Todos.nextOrder(), done: false});
+              Conversations.create({content: data.utterance, order: Conversations.nextOrder(), done: false});
           },
           error: function(){
           },
