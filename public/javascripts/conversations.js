@@ -46,7 +46,104 @@ _.mixin({
 $(function(){
 
 
-var listConversationsStarted = true;
+window.Utterance = Backbone.Model.extend({
+
+  url : function() {
+    return this.id ? '/todos/' + this.id : '/todos';
+  }
+
+});
+
+  window.UtteranceList = Backbone.Collection.extend({
+
+    model: Utterance,
+    url :'/todos',
+
+    nextUtteranceID: function() {
+      if (!this.length) return 1;
+      return this.last().get('utteranceID') + 1;
+    },
+
+    comparator: function(todo) {
+      return todo.get('utteranceID');
+    }
+
+  });
+
+  window.Utterances = new UtteranceList;
+
+  window.UtteranceView = Backbone.View.extend({
+
+    tagName:  "li",
+
+    template: _.template($('#utterance-template').html()),
+
+    initialize: function() {
+      _.bindAll(this, 'render', 'close');
+      this.model.bind('change', this.render);
+      this.model.view = this;
+    },
+
+    render: function() {
+      $(this.el).html(this.template(this.model.toJSON()));
+      this.setText();
+      return this;
+    },
+
+    setText: function() {
+      var text =  'Author ' + this.model.get('authorID') + ': ' + this.model.get('text');
+      this.$('.utterance').text(text);
+
+    }
+  });
+
+  window.AppView = Backbone.View.extend({
+
+    el: $("#todoapp"),
+
+    events: {
+      "keypress #new-todo":  "createOnEnter"
+    },
+
+    initialize: function() {
+      _.bindAll(this, 'addOne', 'addAll', 'render');
+
+      this.input    = this.$("#new-todo");
+
+      Utterances.bind('add',     this.addOne);
+      Utterances.bind('refresh', this.addAll);
+      Utterances.bind('all',     this.render);
+
+      Utterances.fetch();
+      this.startListConversations();
+    },
+
+    render: function() {
+    },
+
+    addOne: function(todo) {
+      var view = new UtteranceView({model: todo});
+      this.$("#todo-list").append(view.render().el);
+    },
+
+    addAll: function() {
+      Utterances.each(this.addOne);
+    },
+
+    newAttributes: function() {
+      return {
+        text: this.input.val(),
+        utteranceID:   Utterances.nextUtteranceID()
+      };
+    },
+
+    createOnEnter: function(e) {
+      if (e.keyCode != 13) return;
+      Utterances.create(this.newAttributes());
+      this.input.val('');
+    }
+  });
+
   // Todo Model
 
 window.Conversation = Backbone.Model.extend({
