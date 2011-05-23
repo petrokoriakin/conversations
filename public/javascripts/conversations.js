@@ -173,13 +173,13 @@ window.Conversation = Backbone.Model.extend({
     send: function() {
       var self = $(this.el);
       var utterance = $('.conversation-textarea', self).val();
-      $('.conversation-textarea', self).val("");
-      $.ajax({
-         url: '/conversations/update?conversationID=' + this.model.get('conversationID') + '&text=' + utterance,
-         dataType: 'json',
-         success: function(data){
-         }
-      });
+      this.model.save({content: $('.conversation-textarea', self).val("")});
+//      $.ajax({
+//         url: '/conversations/update?conversationID=' + this.model.get('conversationID') + '&text=' + utterance,
+//         dataType: 'json',
+//         success: function(data){
+//         }
+//      });
     },
 
     // Close the `"editing"` mode, saving changes to the todo.
