@@ -133,7 +133,7 @@ window.Conversation = Backbone.Model.extend({
     // The DOM events specific to an item.
     events: {
       "click .check"              : "toggleDone",
-      "dblclick div.todo-content" : "edit",
+      "click button#submit"       : "send",
       "click span.todo-destroy"   : "clear",
       "keypress .todo-input"      : "updateOnEnter"
     },
@@ -170,9 +170,17 @@ window.Conversation = Backbone.Model.extend({
     },
 
     // Switch this view into `"editing"` mode, displaying the input field.
-    edit: function() {
-      $(this.el).addClass("editing");
-      this.input.focus();
+    send: function() {
+      var self = $(this.el);
+      var postkey = this.model.get('postKey');
+      var utterance = $('.conversation-textarea', self).val();
+      $('.conversation-textarea', self).val("");
+      $.ajax({
+         url: '/conversations/update?conversationID=' + this.model.get('conversationID') + '&text=' + utterance,
+         dataType: 'json',
+         success: function(data){
+         }
+      });
     },
 
     // Close the `"editing"` mode, saving changes to the todo.
