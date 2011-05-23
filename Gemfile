@@ -11,7 +11,6 @@ gem 'capistrano-ext'
 #gem 'jammit'
 gem 'aws-s3'
 gem 'rmagick', '2.12.2'
-gem 'supermodel', '0.1.4'
 gem 'curb', '0.7.9'
 gem 'mysql2'
 gem 'jasmine'
@@ -25,5 +24,4 @@ end
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
   gem "autotest"
-  gem 'ruby-debug19'
 end
