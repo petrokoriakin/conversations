@@ -87,7 +87,7 @@ window.Todo = Backbone.Model.extend({
 
     // Reference to this collection's model.
     model: Todo,
-    url :'/todos',
+    url :'/conversations',
     // Save all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos"),
 

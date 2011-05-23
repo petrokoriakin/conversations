@@ -1,7 +1,7 @@
 class ConversationsController < ApplicationController
 #comment
   def chatroom
-     if rand(30) > 3
+     if rand(50) > 3
       render :nothing => true, :status => 404
     else
       sleep(rand(10));
@@ -10,6 +10,7 @@ class ConversationsController < ApplicationController
   end
 
   def index
+     p current_identity
      render :json => Conversation.all
    end
 
