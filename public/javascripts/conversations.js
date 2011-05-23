@@ -173,7 +173,6 @@ window.Conversation = Backbone.Model.extend({
     send: function() {
       var self = $(this.el);
       var utterance = $('.conversation-textarea', self).val();
-      alert(utterance);
       this.model.save({content: utterance});
 //      $.ajax({
 //         url: '/conversations/update?conversationID=' + this.model.get('conversationID') + '&text=' + utterance,
