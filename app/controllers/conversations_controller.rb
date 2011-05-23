@@ -1,5 +1,7 @@
 class ConversationsController < ApplicationController
-#comment
+
+  #comment
+  #TODO: There must be a method, that will render new conversations and utterances into existing conversations
   def chatroom
      if rand(150) > 3
       render :nothing => true, :status => 404
@@ -18,7 +20,9 @@ class ConversationsController < ApplicationController
      render :json => Conversation.find(params[:id])
    end
 
+   #TODO: There must be a method to start new conversation
    def create
+     #current_identity.start_conversation(params[:postkey])
      conversation = Conversation.create! params
      render :json => conversation
    end
@@ -32,8 +36,10 @@ class ConversationsController < ApplicationController
      render :json => conversation
    end
 
+   #TODO: There must be method to close conversation and send on the API "active: false" update
    def destroy
     conversation= Conversation.find(params[:id])
+    #current_identity.close_conversations(params[:id])
     conversation.destroy
     render :json => conversation
   end
