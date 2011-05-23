@@ -172,7 +172,6 @@ window.Conversation = Backbone.Model.extend({
     // Switch this view into `"editing"` mode, displaying the input field.
     send: function() {
       var self = $(this.el);
-      var postkey = this.model.get('postKey');
       var utterance = $('.conversation-textarea', self).val();
       $('.conversation-textarea', self).val("");
       $.ajax({
