@@ -309,3 +309,33 @@ html {
   -khtml-transform:rotate(180deg);
   -webkit-transform:rotate(180deg);
 }
+
+
+#new-conversation-box {
+  background: #f8f8ff;
+  border: 2px solid #4a7497;
+  height: auto;
+  width: 160px;
+  padding: 2px 4px 2px 2px;
+  position: relative;
+  right: 10px;
+  float: right;
+  overflow: hidden;
+  z-index: 9999; }
+
+.close-conversation {
+  float: right; }
+
+#conversation-input-box {
+  position: relative; }
+  #conversation-input-box .submit {
+    float: right; }
+
+#conversation-message-box {
+  height: 80px;
+  font-size: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden; }
+
+#text_conversation {
+  font-size: 90%; }

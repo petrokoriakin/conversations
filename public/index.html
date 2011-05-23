@@ -28,10 +28,6 @@
           <span class="ui-tooltip-top" style="display:none;">Press Enter to save this task</span>
         </div>
 
-        <div id="conversations">
-          <div class="conversations"></div>>
-        </div>
-
         <div id="todos">
           <ul id="todo-list"></ul>
         </div>
@@ -56,15 +52,19 @@
     <!-- Templates -->
 
     <script type="text/template" id="item-template">
-      <div class="todo <%= done ? 'done' : '' %>">
-        <div class="display">
-          <input class="check" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
-          <div class="todo-content"></div>
-          <span class="todo-destroy"></span>
+      <div id="new-conversation-box">
+        <div id="header-conversation">
+          <a class="link" id="link-header-conversation">
+            <span id="close-conversation">close</span>
+            <span class="todo-destroy"></span>
+          </a>
         </div>
-        <div class="edit">
-          <input class="todo-input" type="text" value="" />
-        </div>
+          <div id="conversation-input-box">
+            <label> Your message: </label>
+            <button id="submit"> Send </button>
+            <textarea id="text_conversation" class="conversation-textarea" name="conversation[text]" cols="20" rows="2"></textarea>
+            <div id="conversation-message-box"></div>
+          </div>
       </div>
     </script>
 
