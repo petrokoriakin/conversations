@@ -1,2 +1,2 @@
-module TodosHelper
+module ConversationsHelper
 end

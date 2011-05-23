@@ -67,7 +67,7 @@ window.Todo = Backbone.Model.extend({
   },
 
   url : function() {
-    return this.id ? '/conversations/' + this.id : '/todos';
+    return this.id ? '/conversations/' + this.id : '/conversations';
   },
 
   clear: function() {
@@ -307,7 +307,7 @@ window.Todo = Backbone.Model.extend({
         var started_at = _.cacheBuster();
         var request = $.ajax({
           cache: false,
-          url: '/todos/chatroom',
+          url: '/conversations/chatroom',
           dataType: 'json',
           success: function(data, status, jqXHR){
               Todos.create({content: data.utterance, order: Todos.nextOrder(), done: false});

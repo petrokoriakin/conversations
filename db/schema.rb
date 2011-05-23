@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(:version => 20110520165742) do
 
-  create_table "todos", :force => true do |t|
+  create_table "conversations", :force => true do |t|
     t.text     "content"
     t.integer  "order"
     t.boolean  "done"

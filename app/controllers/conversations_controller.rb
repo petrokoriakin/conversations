@@ -10,28 +10,28 @@ class ConversationsController < ApplicationController
   end
 
   def index
-     render :json => Todo.all
+     render :json => Conversation.all
    end
 
    def show
-     render :json => Todo.find(params[:id])
+     render :json => Conversation.find(params[:id])
    end
 
    def create
-     todo = Todo.create! params
-     render :json => todo
+     conversation = Conversation.create! params
+     render :json => conversation
    end
 
    def update
-     todo = Todo.find(params[:id])
-     todo.update_attributes! params
-     render :json => todo
+     conversation = Conversation.find(params[:id])
+     conversation.update_attributes! params
+     render :json => conversation
    end
 
    def destroy
-    todo = Todo.find(params[:id])
-    todo.destroy
-    render :json => todo
+    conversation= Conversation.find(params[:id])
+    conversation.destroy
+    render :json => conversation
   end
 
 end

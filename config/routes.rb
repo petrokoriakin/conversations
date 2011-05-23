@@ -1,8 +1,8 @@
 Js::Application.routes.draw do
 
-  get "todos/chatroom"
+  get "conversations/chatroom"
 
-  resources :todos
+  resources :conversations
 
   get "demo/polling"
 
