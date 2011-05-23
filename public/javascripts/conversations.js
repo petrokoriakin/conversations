@@ -97,7 +97,7 @@ window.Utterance = Backbone.Model.extend({
     }
   });
 
-  window.AppView = Backbone.View.extend({
+  window.AppUtterances = Backbone.View.extend({
 
     el: $("#todoapp"),
 
