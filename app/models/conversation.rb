@@ -1,4 +1,4 @@
-class Todo < ActiveRecord::Base
+class Conversation < ActiveRecord::Base
 attr_accessible :content, :order, :done
 
   def to_json(options = {})

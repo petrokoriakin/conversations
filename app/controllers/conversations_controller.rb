@@ -1,4 +1,4 @@
-class TodosController < ApplicationController
+class ConversationsController < ApplicationController
 
   def chatroom
      if rand(30) > 3

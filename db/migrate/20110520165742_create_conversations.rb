@@ -1,6 +1,6 @@
-class CreateTodos < ActiveRecord::Migration
+class CreateConversations < ActiveRecord::Migration
   def self.up
-    create_table :todos do |t|
+    create_table :conversations do |t|
       t.text :content
       t.integer :order
       t.boolean :done

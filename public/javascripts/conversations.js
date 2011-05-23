@@ -67,7 +67,7 @@ window.Todo = Backbone.Model.extend({
   },
 
   url : function() {
-    return this.id ? '/todos/' + this.id : '/todos';
+    return this.id ? '/conversations/' + this.id : '/todos';
   },
 
   clear: function() {
