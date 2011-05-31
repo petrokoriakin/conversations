@@ -1,4 +1,0 @@
-social_api:
-  development: localhost:4000
-  test: localhost:3001
-  production: social-api.lv.svitla.com
